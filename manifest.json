@@ -1,0 +1,37 @@
+{
+    "name": "thinkTRIBE Error Popup",
+    "description": "Preview errors on the wallboard",
+    "version": "1.0",
+    "manifest_version": 3,
+    "permissions": [
+        "tabs"
+    ],
+    "host_permissions": [
+        "https://portal.thinktribe.com/",
+        "https://portal-staging.thinktribe.com/"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://portal.thinktribe.com/*/clientWallboard*"
+            ],
+            "js": [
+                "jquery-3.6.0.min.js",
+                "inject.js"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "hover.js"
+            ],
+            "matches": [
+                "https://portal.thinktribe.com/*",
+                "https://portal-staging.thinktribe.com/*"
+            ]
+        }
+    ],
+    "action": {}
+}
