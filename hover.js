@@ -21,12 +21,13 @@ jq_div.hoverIntent({
 
 $("body").append(jq_div);
 
-function render(sampleTime, json_response){
+function render(json_response){
     var sample = json_response['data']['userJourney']['sample'];
 	var injector = sample['injector'];
 	var status = sample['status'];
 	var errorCauses = sample['errorCauses'];
 	var steps = sample['steps'];
+    var sampletime = moment.tz(sample['sampleTime'], "Europe/London").format("dddd Do MMMM, HH:mm:ss");
 	const isSlow = (status === "SLOW");
 
 	for (var i = 0; i < errorCauses.length; i++) {
@@ -82,7 +83,7 @@ function render(sampleTime, json_response){
 		}
 	</style>
 		<div id="errors" style="word-wrap: break-word; padding: 10px; overflow-y: scroll; max-height: 300px;">
-			<span style="font-weight: bold;">Sample Time: </span>${sampleTime}
+			<span style="font-weight: bold;">Sample Time: </span>${sampletime}
 			<br>
 			<br>
 			<span style="font-weight: bold;">Status: </span>
@@ -171,7 +172,7 @@ function on_hover() {
 		}),
 		contentType: "application/json",
 		success: function(json_data) {
-            render(sampleTime, json_data);
+            render(json_data);
             jq_div.css("left", posX);
             jq_div.css("top", posY);
             jq_div.css("display", "block");
