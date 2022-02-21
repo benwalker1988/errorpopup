@@ -1,0 +1,13 @@
+#errorPopupDiv {
+	z-index: 9999;
+	position: absolute;
+	display: none;
+	background-color: white;
+	opacity: 1;
+	border-style:solid;
+	border-width:2px;
+}
+
+#errorPopupDiv:hover {
+	display: block;
+}

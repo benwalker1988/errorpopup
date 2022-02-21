@@ -17,6 +17,7 @@
             ],
             "js": [
                 "jquery-3.6.0.min.js",
+                "jquery.hoverIntent.min.js",
                 "inject.js"
             ],
             "run_at": "document_end"
@@ -25,7 +26,8 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "hover.js"
+                "hover.js",
+                "hover.css"
             ],
             "matches": [
                 "https://portal.thinktribe.com/*",
