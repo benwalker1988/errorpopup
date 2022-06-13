@@ -1,0 +1,50 @@
+#errorPopupDiv {
+    z-index: 9999;
+    position: absolute;
+    display: none;
+    background-color: white;
+    opacity: 1;
+    border-style:solid;
+    border-width:2px;
+}
+
+#errorPopupDiv:hover {
+    display: block;
+}
+
+.WARNING {
+    border: 2px solid gold;
+    margin-bottom: 2px;
+    padding: 5px;
+}
+.ERROR {
+    border: 2px solid red;
+    margin-bottom: 2px;
+    padding: 5px;
+}
+.SLOW {
+    border: 2px solid rgb(128, 0, 128);
+    margin-bottom: 2px;
+    padding: 5px;
+}
+.DEBUG {
+    border: 2px solid #6699FF;
+    margin-bottom: 2px;
+    padding: 5px;
+}
+.status {
+    font-weight: bold;
+    color: white;
+}
+.ERROR_status {
+    background-color: red;
+}
+.SLOW_status {
+    background-color: rgb(128, 0, 128);
+}
+.WARNING_status {
+    background-color: gold;
+}
+.DEBUG_status {
+    background-color: #6699FF;
+}
