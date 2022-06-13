@@ -3,10 +3,6 @@
     "description": "Preview errors on the wallboard",
     "version": "1.0",
     "manifest_version": 3,
-    "host_permissions": [
-        "https://portal.thinktribe.com/",
-        "https://portal-staging.thinktribe.com/"
-    ],
     "content_scripts": [
         {
             "matches": [
