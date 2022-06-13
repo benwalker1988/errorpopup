@@ -3,9 +3,6 @@
     "description": "Preview errors on the wallboard",
     "version": "1.0",
     "manifest_version": 3,
-    "permissions": [
-        "tabs"
-    ],
     "host_permissions": [
         "https://portal.thinktribe.com/",
         "https://portal-staging.thinktribe.com/"
