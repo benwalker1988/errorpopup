@@ -13,7 +13,8 @@
     "content_scripts": [
         {
             "matches": [
-                "https://portal.thinktribe.com/*/clientWallboard*"
+                "https://portal.thinktribe.com/*/clientWallboard*",
+                "https://portal-staging.thinktribe.com/*/clientWallboard*"
             ],
             "js": [
                 "jquery-3.6.0.min.js",

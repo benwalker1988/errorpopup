@@ -1,36 +1,33 @@
 
-// create singular div element, where the content will be replaced
-var content_div = document.createElement("div");
-var jq_div = $(content_div);
-jq_div.attr("id", "errorPopupDiv");
-jq_div.css("width", "420px");
+let popup_div = $(document.createElement("div"));
+popup_div.attr("id", "errorPopupDiv");
+popup_div.css("width", "420px");
 
-// Just need to make this hide when we mouse out for long enough
-jq_div.hoverIntent({
+popup_div.hoverIntent({
     "interval": 0,
     "timeout": 500,
     "out": function() {
-        jq_div.html("");
-        jq_div.css("display", "none");
-        jq_div.css("left", "");
-        jq_div.css("top", "");
+        popup_div.html("");
+        popup_div.css("display", "none");
+        popup_div.css("left", "");
+        popup_div.css("top", "");
     },
     "over": function() {}
 });
 
-$("body").append(jq_div);
+$("body").append(popup_div);
 
 function render(json_response){
-    var sample = json_response['data']['userJourney']['sample'];
-    var injector = sample['injector'];
-    var status = sample['status'];
-    var errorCauses = sample['errorCauses'];
-    var steps = sample['steps'];
-    var sampletime = moment.tz(sample['sampleTime'], "Europe/London").format("dddd Do MMMM, HH:mm:ss");
+    const sample = json_response['data']['userJourney']['sample'];
+    const injector = sample['injector'];
+    const status = sample['status'];
+    const errorCauses = sample['errorCauses'];
+    const steps = sample['steps'];
+    const sampletime = moment.tz(sample['sampleTime'], "Europe/London").format("dddd Do MMMM, HH:mm:ss");
     const isSlow = (status === "SLOW");
 
-    for (var i = 0; i < errorCauses.length; i++) {
-        var number = errorCauses[i]['stepNumber'];
+    for (let i = 0; i < errorCauses.length; i++) {
+        const number = errorCauses[i]['stepNumber'];
         errorCauses[i]['stepName'] = steps.filter(
             function(item) {
                 return item.number === number
@@ -42,7 +39,7 @@ function render(json_response){
         );
     }
 
-    jq_div.html(`
+    popup_div.html(`
     <style>
         .WARNING {
             border: 2px solid gold;
@@ -117,31 +114,27 @@ function render(json_response){
 }
 
 function on_hover() {
-    var offset = $(this).offset();
-    var posY = offset.top + $(this).height(); //two for the border
-    var window_width = $(document).width() - 50;
-    var posX = offset.left;
+    const offset = $(this).offset();
+    const posY = offset.top + $(this).height();
+    const window_width = $(document).width() - 50;
+    let posX = offset.left;
     if (posX + 420 > window_width) {
         posX = posX - 420;
     }
 
-    var url = this.href.animVal;
-    console.log(url);
-    var params;
-    var ujId, sampleTime, backup;
+    let url = this.href.animVal;
+    let uj_id, sample_time, backup;
 
-    params = url.split('?')[1];
-    params = params.split('&');
+    const params = new URLSearchParams(url.split('?')[1]);
 
-    backup = JSON.parse(params[2].split('=')[1].toLowerCase());
+    backup = JSON.parse(params.get('backup').toLowerCase());
+    uj_id = parseInt(params.get('uj'));
+    sample_time = params.get('sampleTime').replace('+', ' ').replace('%3A', ':').replace('%3A', ':');
 
-    ujId = parseInt(params[0].split('=')[1]);
-
-    sampleTime = params[1].split('=')[1].replace('+', ' ').replace('%3A', ':').replace('%3A', ':');
-    var utcSampleTime = moment.tz(sampleTime, "Europe/London").format();
+    const utc_sample_time = moment.tz(sample_time, "Europe/London").format();
 
     $.ajax({
-        url:  "https://portal.thinktribe.com/api/private",
+        url:  window.location.origin + "/api/private",
         method: "POST",
         data: JSON.stringify({
             query: `query ($ujId: Int!, $sampleTime: DateTime!, $backup: Boolean!) {
@@ -164,17 +157,17 @@ function on_hover() {
 				}
 			}`,
             variables: {
-                "ujId": ujId,
-                "sampleTime": utcSampleTime,
+                "ujId": uj_id,
+                "sampleTime": utc_sample_time,
                 "backup": backup
             }
         }),
         contentType: "application/json",
         success: function(json_data) {
             render(json_data);
-            jq_div.css("left", posX);
-            jq_div.css("top", posY);
-            jq_div.css("display", "block");
+            popup_div.css("left", posX);
+            popup_div.css("top", posY);
+            popup_div.css("display", "block");
         }
     });
 }
@@ -182,11 +175,11 @@ function on_hover() {
 hoverIntentCfg = {
     "over": on_hover,
     "out": function() {
-    	if (!jq_div.is(":hover")) {
-            jq_div.html("");
-            jq_div.css("display", "none");
-            jq_div.css("left", "");
-            jq_div.css("top", "");
+    	if (!popup_div.is(":hover")) {
+            popup_div.html("");
+            popup_div.css("display", "none");
+            popup_div.css("left", "");
+            popup_div.css("top", "");
         }
     },
     "timeout": 500,
@@ -194,17 +187,35 @@ hoverIntentCfg = {
 };
 
 function add_hovers(elem) {
+    // Get all the svgs for error/warning/slow/debug status
     $(elem.querySelectorAll('rect.error, rect.warning, rect.slow, rect.debug')).each(function(i) {
-        var parent = this.parentElement;
+        // Hover needs to be added on the a tag above the svg
+        const parent = this.parentElement;
+        // And add the hover
         $(parent).hoverIntent(hoverIntentCfg);
     });
 }
 
+
 $(document).ready(function() {
+    // For all the status bar containers
     $(".statusBarContainer").each(function(i) {
+        // Add the initial hover
         add_hovers(this);
-        $(this).on('DOMSubtreeModified', function(){
-            add_hovers(event.target);
+
+        // Watch the svg for changes (when the page auto updates), and add the hover onto the newly drawn bar
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                add_hovers(mutation.target);
+            });
+        })
+        observer.observe(this, {
+            attributes: true,
+            childList: true,
+            characterData: true
         });
+
     });
 });
+
+$.fx.off = true;

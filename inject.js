@@ -9,5 +9,4 @@ var link = document.createElement('link');
 link.rel  = 'stylesheet';
 link.type = 'text/css';
 link.href = chrome.runtime.getURL('hover.css');
-console.log(link);
 (document.head || document.documentElement).appendChild(link);
