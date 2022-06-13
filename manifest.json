@@ -19,21 +19,14 @@
             "js": [
                 "jquery-3.6.0.min.js",
                 "jquery.hoverIntent.min.js",
-                "inject.js"
+                "moment.js",
+                "moment-timezone-with-data-10-year-range.js",
+                "error-popup.js"
+            ],
+            "css": [
+                "error-popup.css"
             ],
             "run_at": "document_end"
-        }
-    ],
-    "web_accessible_resources": [
-        {
-            "resources": [
-                "hover.js",
-                "hover.css"
-            ],
-            "matches": [
-                "https://portal.thinktribe.com/*",
-                "https://portal-staging.thinktribe.com/*"
-            ]
         }
     ],
     "action": {}
