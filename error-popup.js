@@ -17,7 +17,7 @@ popup_div.hoverIntent({
 
 $("body").append(popup_div);
 
-function render(json_response){
+function render(sample_url, json_response){
     const sample = json_response['data']['userJourney']['sample'];
     const injector = sample['injector'];
     const status = sample['status'];
@@ -49,6 +49,9 @@ function render(json_response){
             <br>
             <br>
             <span style="font-weight: bold;">Injector: </span>${injector}
+            <br>
+            <br>
+            <a href="${sample_url}" target="_blank">View Sample</a>
             <br>
             <br>
             ${errorCauses.map((error) => `
@@ -126,7 +129,7 @@ function on_hover() {
         }),
         contentType: "application/json",
         success: function(json_data) {
-            render(json_data);
+            render(url, json_data);
             popup_div.css("left", posX);
             popup_div.css("top", posY);
             popup_div.css("display", "block");
@@ -160,23 +163,44 @@ function add_hovers(elem) {
 
 
 $(document).ready(function() {
-    // For all the status bar containers
-    $(".statusBarContainer").each(function(i) {
-        // Add the initial hover
-        add_hovers(this);
+    // Only include the hover if this is the scivisum customer (ie, customer 1)
+    // Although only used internally, we have CS impersonate customers when they do demos,
+    // and don't want customers to see this
+    $.ajax({
+        url:  window.location.origin + "/api/private",
+        method: "POST",
+        data: JSON.stringify({
+            query: `
+            query{
+                currentUser{
+                    customer{
+                      customerID
+                    }
+                  }
+            }`
+        }),
+        contentType: "application/json",
+        success: function(json_data) {
+            if (json_data['data']['currentUser']['customer']['customerID'] === 1) {
+                // For all the status bar containers
+                $(".statusBarContainer").each(function (i) {
+                    // Add the initial hover
+                    add_hovers(this);
 
-        // Watch the svg for changes (when the page auto updates), and add the hover onto the newly drawn bar
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                add_hovers(mutation.target);
-            });
-        })
-        observer.observe(this, {
-            attributes: true,
-            childList: true,
-            characterData: true
-        });
-
+                    // Watch the svg for changes (when the page auto updates), and add the hover onto the newly drawn bar
+                    const observer = new MutationObserver(function (mutations) {
+                        mutations.forEach(function (mutation) {
+                            add_hovers(mutation.target);
+                        });
+                    })
+                    observer.observe(this, {
+                        attributes: true,
+                        childList: true,
+                        characterData: true
+                    });
+                });
+            }
+        }
     });
 });
 
