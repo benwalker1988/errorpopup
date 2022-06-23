@@ -32,19 +32,19 @@
     margin-bottom: 2px;
     padding: 5px;
 }
-.status {
+span.status {
     font-weight: bold;
     color: white;
 }
-.ERROR_status {
+span.ERROR_status {
     background-color: red;
 }
-.SLOW_status {
+span.SLOW_status {
     background-color: rgb(128, 0, 128);
 }
-.WARNING_status {
+span.WARNING_status {
     background-color: gold;
 }
-.DEBUG_status {
+span.DEBUG_status {
     background-color: #6699FF;
 }
