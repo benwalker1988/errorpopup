@@ -19,10 +19,10 @@ $("body").append(popup_div);
 
 function render(sample_url, json_response){
     const sample = json_response['data']['userJourney']['sample'];
+    const steps = json_response['data']['userJourney']['steps']
     const injector = sample['injector'];
     const status = sample['status'];
     const errorCauses = sample['errorCauses'];
-    const steps = sample['steps'];
     const sampletime = moment.tz(sample['sampleTime'], "Europe/London").format("dddd Do MMMM, HH:mm:ss");
     const isSlow = (status === "SLOW");
 
@@ -30,11 +30,11 @@ function render(sample_url, json_response){
         const number = errorCauses[i]['stepNumber'];
         errorCauses[i]['stepName'] = steps.filter(
             function(item) {
-                return item.number === number
+                return item.stepNumber === number
             }
         ).map(
             function(item) {
-                return item.name
+                return item.stepName
             }
         );
     }
@@ -114,10 +114,10 @@ function on_hover() {
                             url,
                             status
                         }
-                        steps {
-                            number
-                            name
-                        }
+                    }
+                    steps{
+                        stepName
+                        stepNumber
                     }
 				}
 			}`,
@@ -203,5 +203,3 @@ $(document).ready(function() {
         }
     });
 });
-
-$.fx.off = true;
