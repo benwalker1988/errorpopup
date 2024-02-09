@@ -1,7 +1,7 @@
 {
     "name": "thinkTRIBE Error Popup",
     "description": "Preview errors on the wallboard",
-    "version": "1.4",
+    "version": "1.5",
     "manifest_version": 3,
     "content_scripts": [
         {
@@ -14,7 +14,8 @@
                 "jquery.hoverIntent.min.js",
                 "moment.js",
                 "moment-timezone-with-data-10-year-range.js",
-                "error-popup.js"
+                "error-popup.js",
+                "group-ujs.js"
             ],
             "css": [
                 "error-popup.css"
