@@ -1,7 +1,7 @@
 {
     "name": "thinkTRIBE Error Popup",
     "description": "Preview errors on the wallboard",
-    "version": "1.5",
+    "version": "1.6",
     "manifest_version": 3,
     "content_scripts": [
         {

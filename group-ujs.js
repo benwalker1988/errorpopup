@@ -19,13 +19,15 @@ function group_access() {
                     ujID,
                     name
                 } = journey;
-                if (!groupedJourneys[group]) {
-                    groupedJourneys[group] = [];
+                if (group !== null) {
+                    if (!groupedJourneys[group]) {
+                        groupedJourneys[group] = [];
+                    }
+                    groupedJourneys[group].push({
+                        ujID,
+                        name
+                    });
                 }
-                groupedJourneys[group].push({
-                    ujID,
-                    name
-                });
             });
 
             // Sort user journeys within each group by their name
@@ -47,7 +49,7 @@ function group_access() {
                 // Move each journey row, inserting it at the bottom of the tbody
                 journeys.forEach(journey => {
                     const journeyRow = $(`#TR-${journey.ujID}`);
-                    if (journeyRow.length) {
+                    if (journeyRow.length && !journeyRow[0].classList.contains('staging')) {
                         tbody.append(journeyRow);
                     }
                 });
